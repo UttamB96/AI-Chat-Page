@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from .views import GenerateResponseView
 
 urlpatterns = [
-    path('generate/', views.generate_response, name='generate_response')
+    path('generate/', GenerateResponseView.as_view(), name='generate_response')
 ]
