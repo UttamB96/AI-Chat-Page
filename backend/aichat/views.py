@@ -36,7 +36,7 @@ class GenerateResponseView(APIView):
                 model_response = requests.post(ollama_url, json=payload)
                 model_response.raise_for_status()  # Raise exception for HTTP errors
                 
-                model_data = response.json()
+                model_data = model_response.json()
                 return JsonResponse({'response': model_data.get('response', '')})
                 
             except json.JSONDecodeError:
