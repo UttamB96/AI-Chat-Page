@@ -3,3 +3,5 @@ views.py.bkp
 frontend-sample/
 .ropeproject
 .vscode
+node_modules/
+frontend/node_modules/
