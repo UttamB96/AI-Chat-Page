@@ -13,7 +13,7 @@ import { HomeContextProvider, useHomeContext } from "./context/HomeContext";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useHomeContext();
+  const { setIsLoggedIn } = useHomeContext();
 
   const handleLogin = () => {
     setShowLogin(true);

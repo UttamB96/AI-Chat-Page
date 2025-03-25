@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Card,
   TextInput,
   Button,
-  Group,
   Alert,
   PasswordInput,
-  Anchor,
   Text,
   CloseButton,
 } from "@mantine/core";
@@ -19,12 +16,11 @@ interface LoginCardProps {
   onLogin: () => void;
 }
 
-function LoginCard({ onClose, onLogin }: LoginCardProps) {
+function LoginCard({ onClose }: LoginCardProps) {
   //React.FC<LoginCardProps> ({ onLogin }) => {
   const [user_name, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   // Login Handler
   const handleLogin = async () => {
@@ -32,12 +28,17 @@ function LoginCard({ onClose, onLogin }: LoginCardProps) {
       // Replace with your login API endpoint
       const response = await axios({
         method: "post",
-        url: "http://localhost:8000/api/users/login",
+        url: "http://localhost:8000/api/users/login/",
         data: {
           user_name: user_name,
           password: password,
         },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        //withCredentials: true,
       });
+      console.log(response.status)
       if (response.status === 200) {
         //onLogin();
         console.log("Login Success!");
@@ -45,7 +46,7 @@ function LoginCard({ onClose, onLogin }: LoginCardProps) {
         console.log("Login Failed!");
       }
     } catch {
-      //setError("Login failed. Please check your credentials.");
+      setError("Login failed. Please check your credentials.");
       console.log("Login Failed");
     }
   };
@@ -105,19 +106,6 @@ function LoginCard({ onClose, onLogin }: LoginCardProps) {
             Login
           </Button>
         </form>
-
-        <Group justify="center" mt="md">
-          <Text size="sm">
-            Not a member?{" "}
-            <Anchor
-              onClick={() => navigate("/register")}
-              size="sm"
-              style={{ cursor: "pointer" }}
-            >
-              Register
-            </Anchor>
-          </Text>
-        </Group>
       </Card>
     </div>
   );

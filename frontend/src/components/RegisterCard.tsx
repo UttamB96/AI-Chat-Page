@@ -28,7 +28,7 @@ function RegisterCard({ onClose, onLogin }: LoginCardProps) {
   const handleRegister = async () => {
     try {
       // Replace with your login API endpoint
-      const response = await axios.post("/api/users/register", {
+      const response = await axios.post("http://localhost:8000/api/users/register/", {
         name,
         username,
         email,

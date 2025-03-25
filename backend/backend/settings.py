@@ -159,7 +159,13 @@ SIMPLE_JWT = {
     'rest_framework_simplejwt.authentication.JWTAuthentication',
 ]'''
 
+# Add the URL to frontend
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5432',
+    'http://localhost:5173',
 ]
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5432","http://localhost:5173"]
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5432","http://localhost:5173"]
+CSRF_COOKIE_HTTPONLY = True  # Allows JavaScript to read the cookie

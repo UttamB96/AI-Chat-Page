@@ -20,6 +20,7 @@ class CookieJWTAuthentication(BaseAuthentication):
             return "No such user"  # No token found, authentication skipped (another class may handle it)
 
         try:
+            # Use this to generate encrypted token
             payload = jwt.decode(
                 token,
                 settings.SECRET_KEY,
@@ -38,10 +39,12 @@ class CookieJWTAuthentication(BaseAuthentication):
             raise AuthenticationFailed(_('User not found'))
 
         # Return the user and the token if the authentication is successful
+        '''
         context = {
             "status": "Success",
             "user name": check,
             "token": str(token)
         }
+        '''
         #response = Response(context, status=status.HTTP_200_OK)
         return (check, str(token))
