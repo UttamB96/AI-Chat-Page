@@ -9,21 +9,27 @@ import {
   CloseButton,
 } from "@mantine/core";
 import "./Card.css";
+import TopAlert from "./TopAlert.tsx";
+import { useAuth } from "../context/LoginContext.tsx";
 import axios from "axios";
 
 interface LoginCardProps {
   onClose: () => void;
-  onLogin: () => void;
 }
 
 function LoginCard({ onClose }: LoginCardProps) {
-  //React.FC<LoginCardProps> ({ onLogin }) => {
   const [user_name, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setLoggedIn } = useAuth();
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
   const [error, setError] = useState("");
 
   // Login Handler
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); //Prevents page refresh
     try {
       // Replace with your login API endpoint
       const response = await axios({
@@ -36,17 +42,28 @@ function LoginCard({ onClose }: LoginCardProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        //withCredentials: true,
       });
-      console.log(response.status)
+      console.log(response.status);
       if (response.status === 200) {
-        //onLogin();
+        setLoggedIn(true);
         console.log("Login Success!");
+        setAlert({ type: "success", message: "Login Successful" });
+        setTimeout(() => setAlert(null), 2000);
       } else {
         console.log("Login Failed!");
+        setAlert({
+          type: "error",
+          message: "Login failed. Please check your credentials.",
+        });
+        setTimeout(() => setAlert(null), 3000);
       }
     } catch {
       setError("Login failed. Please check your credentials.");
+      setAlert({
+        type: "error",
+        message: "Login failed. Please check your credentials.",
+      });
+      setTimeout(() => setAlert(null), 3000);
       console.log("Login Failed");
     }
   };
@@ -82,6 +99,7 @@ function LoginCard({ onClose }: LoginCardProps) {
         <Text ta="center" size="xl" mb={20}>
           Login
         </Text>
+        {alert && <TopAlert type={alert.type} message={alert.message} />}
         <form className="form" onSubmit={handleLogin}>
           <TextInput
             ta="left"

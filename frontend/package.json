@@ -14,11 +14,14 @@
     "@mantine/form": "^7.16.3",
     "@mantine/hooks": "^7.16.3",
     "@mantine/notifications": "^7.16.3",
+    "@tabler/core": "^1.4.0",
+    "@tabler/icons-react": "^3.34.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.5",
+    "react-router-dom": "^7.7.1",
+    "tabler": "^1.0.0",
     "vite-plugin-turbo-console": "^0.3.2"
   },
   "devDependencies": {

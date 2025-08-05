@@ -5,15 +5,15 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Button, Group, MantineProvider } from "@mantine/core";
 
 import Home from "./pages/Home";
+import { useAuth } from "./context/LoginContext"; // Shared Context
 import LoginCard from "./components/LoginCard";
 import RegisterCard from "./components/RegisterCard";
 import { useState } from "react";
-import { HomeContextProvider, useHomeContext } from "./context/HomeContext";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const { setIsLoggedIn } = useHomeContext();
+  const { loggedIn } = useAuth();
 
   const handleLogin = () => {
     setShowLogin(true);
@@ -28,9 +28,9 @@ function App() {
       <Group className="page-icon" justify="flex-start" mt="md">
         <img src={myIcon} alt="Home Icon" className="top-left-icon" />
       </Group>
-      <HomeContextProvider>
-        <Router>
-          <Group className="login-bar" justify="flex-end" mt="md">
+      <Router>
+        <Group className="login-bar" justify="flex-end" mt="md">
+          {!loggedIn && (
             <Button
               //justify="left"
               variant="filled"
@@ -40,32 +40,30 @@ function App() {
             >
               Login
             </Button>
-            {showLogin && (
-              <LoginCard
-                onClose={() => setShowLogin(false)}
-                onLogin={() => setIsLoggedIn(true)}
-              />
-            )}
-            <Button
-              variant="filled"
-              color="grape"
-              size="lg"
-              onClick={handleRegister}
-            >
-              Register
-            </Button>
-            {showRegister && (
-              <RegisterCard
-                onClose={() => setShowRegister(false)}
-                onLogin={() => setIsLoggedIn(true)}
-              />
-            )}
-          </Group>
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </Router>
-      </HomeContextProvider>
+          )}
+          {showLogin && (
+            <LoginCard
+              onClose={() => {
+                setShowLogin(false);
+              }}
+            />
+          )}
+          <Button
+            variant="filled"
+            color="grape"
+            size="lg"
+            onClick={handleRegister}
+          >
+            Register
+          </Button>
+          {showRegister && (
+            <RegisterCard onClose={() => setShowRegister(false)} />
+          )}
+        </Group>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Router>
     </MantineProvider>
   );
 }

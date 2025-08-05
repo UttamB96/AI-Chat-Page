@@ -9,37 +9,48 @@ import {
   CloseButton,
 } from "@mantine/core";
 import "./Card.css";
+import TopAlert from "./TopAlert.tsx";
 import axios from "axios";
 
 interface LoginCardProps {
   onClose: () => void;
-  onLogin: () => void;
 }
 
-function RegisterCard({ onClose, onLogin }: LoginCardProps) {
+function RegisterCard({ onClose }: LoginCardProps) {
   //React.FC<LoginCardProps> ({ onLogin }) => {
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [user_name, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
   const [error, setError] = useState("");
 
   // Login Handler
-  const handleRegister = async () => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); //Prevents page refresh
     try {
       // Replace with your login API endpoint
-      const response = await axios.post("http://localhost:8000/api/users/register/", {
-        name,
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/users/register/",
+        {
+          name,
+          user_name,
+          email,
+          password,
+        }
+      );
       if (response.status === 201) {
-        onLogin();
-        console.log("User registered and logged in!");
+        console.log("User registered successfully! procees to Login.");
+        setAlert({ type: "success", message: "Registration Successful" });
+        setTimeout(() => setAlert(null), 3000);
       }
     } catch {
-      setError("Login failed. Please check your credentials.");
+      setError("Registration failed. User already exists.");
+      setAlert({ type: "error", message: "Registration Failed" });
+      setTimeout(() => setAlert(null), 3000);
     }
   };
 
@@ -75,6 +86,7 @@ function RegisterCard({ onClose, onLogin }: LoginCardProps) {
         <Text ta="center" size="xl" mb={20}>
           Register
         </Text>
+        {alert && <TopAlert type={alert.type} message={alert.message} />}
         <form className="form" onSubmit={handleRegister}>
           <TextInput
             ta="left"
@@ -89,7 +101,7 @@ function RegisterCard({ onClose, onLogin }: LoginCardProps) {
             ta="left"
             label="Username"
             placeholder="Your Unique Username"
-            value={username}
+            value={user_name}
             onChange={(e) => setUsername(e.currentTarget.value)}
             required
             mb="md"

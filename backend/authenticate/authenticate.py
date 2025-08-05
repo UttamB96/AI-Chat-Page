@@ -1,50 +1,33 @@
 # authenticate/authenticate.py
-from rest_framework.response import Response
-from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.translation import gettext_lazy as _
-from rest_framework_simplejwt.exceptions import InvalidToken
-from rest_framework_simplejwt.tokens import UntypedToken
-from rest_framework import status
-from django.conf import settings
+from rest_framework_simplejwt.authentication import JWTAuthentication
 import jwt
 from django.contrib.auth import get_user_model
 
-class CookieJWTAuthentication(BaseAuthentication):
+
+class CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
-        # Extract the token from cookies (adjust 'access_token' to match your cookie name)
-        username = request.COOKIES.get('username')
-        token = str(request.COOKIES.get('token'))
+        # Try reading the token from the 'Authorization' header first
+        header_auth = super().authenticate(request)
+        if header_auth:
+            return header_auth
+
+        token = request.COOKIES.get("token")  # Get webtoken (cookie)
 
         if not token:
-            return "No such user"  # No token found, authentication skipped (another class may handle it)
+            return None  # No token found, authentication skipped (another class may handle it)
 
         try:
-            # Use this to generate encrypted token
-            payload = jwt.decode(
-                token,
-                settings.SECRET_KEY,
-                algorithms=["HS256"],  # You can specify the algorithm used in your project
-            )
-            # Get user from the payload
-            check = get_user_model().objects.get(user_name=username)
-            # Placeholder return statement. Needs to be changed based on frontend.
-            #return Response({'username': check, 'token': str(token)}, status=status.HTTP_200_OK)
+            # Validate token and get username from validated token
+            validate_token = self.get_validated_token(token)
+            validate_user = self.get_user(validate_token)
 
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed(_('Token has expired'))
+            raise AuthenticationFailed(_("Token has expired"))
         except jwt.InvalidTokenError:
-            raise AuthenticationFailed(_('Invalid token'))
+            raise AuthenticationFailed(_("Invalid token"))
         except get_user_model().DoesNotExist:
-            raise AuthenticationFailed(_('User not found'))
+            raise AuthenticationFailed(_("User not found"))
 
-        # Return the user and the token if the authentication is successful
-        '''
-        context = {
-            "status": "Success",
-            "user name": check,
-            "token": str(token)
-        }
-        '''
-        #response = Response(context, status=status.HTTP_200_OK)
-        return (check, str(token))
+        return (validate_user, validate_token)

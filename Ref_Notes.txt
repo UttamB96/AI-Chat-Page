@@ -1,0 +1,6 @@
+Postgresql Table fields:
+name, username, email, password
+
+Django admin creds (temporary):
+user: client
+password: halifax@2025
