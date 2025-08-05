@@ -1,4 +1,3 @@
-//import { useContext, useState } from "react";
 import "./Home.css";
 import {
   Container,
@@ -9,14 +8,11 @@ import {
   Loader,
   Text,
 } from "@mantine/core";
-//import LoginCard from "../components/LoginCard";
-//import { useHomeContext } from "../context/HomeContext";
 import { useAuth } from "../context/LoginContext";
 import axios from "axios";
 import { useState } from "react";
 
 const Home = () => {
-  //const { isLoggedIn } = useHomeContext();
   const [userMessage, setUserMessage] = useState("");
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const { loggedIn } = useAuth();
@@ -61,7 +57,7 @@ const Home = () => {
           <TextInput
             size="xl"
             radius="md"
-            disabled={loading || !loggedIn} //|| !userMessage || !isLoggedIn}
+            disabled={loading || !loggedIn}
             //description="Converse with Chatterbox here"
             placeholder="How can I assist you today?"
             value={userMessage}
@@ -74,7 +70,7 @@ const Home = () => {
             className="send-button"
             size="lg"
             onClick={handleChat}
-            disabled={loading} //|| !isLoggedIn }//|| !userMessage } // Disable the button when loading or message is empty
+            disabled={loading} // Disable the button when loading or message is empty
           >
             Send
           </Button>

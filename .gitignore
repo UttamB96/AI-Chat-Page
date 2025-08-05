@@ -1,7 +1,6 @@
-Notes.txt
-views.py.bkp
+Ref_Notes.txt
 frontend-sample/
 .ropeproject
 .vscode
-node_modules/
 frontend/node_modules/
+package-lock.json
