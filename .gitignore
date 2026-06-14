@@ -4,3 +4,4 @@ frontend-sample/
 .vscode
 frontend/node_modules/
 package-lock.json
+node_modules/
